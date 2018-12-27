@@ -273,5 +273,13 @@ func main() {
 			return
 		}
 	})
+	http.HandleFunc("/metrics/job/", func(w http.ResponseWriter, r *http.Request) {
+		// TODO: Extract and use the job name and other labels
+		if err := a.parseAndMerge(r.Body); err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	})
 	log.Fatal(http.ListenAndServe(*listen, nil))
 }
